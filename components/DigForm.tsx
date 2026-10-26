@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { AppIcon } from "./Decor";
+import { StableLabel } from "./StableLabel";
 import { startDig } from "./DigOverlay";
 import { track } from "@/lib/analytics";
 import { xHandleFor } from "@/lib/devs";
@@ -97,7 +98,7 @@ export function DigForm({
           disabled={pending}
           className="btn-ink shrink-0 rounded-full px-5 py-2.5 text-sm font-bold disabled:opacity-70 sm:px-6"
         >
-          {pending ? "Digging…" : self ? "Dig it up" : "Roast them"}
+          <StableLabel labels={[self ? "Dig it up" : "Roast them", "Digging…"]} active={pending ? 1 : 0} />
         </button>
       </div>
       <p id={`${id}-err`} role="alert" className="min-h-0 pl-4 text-sm font-medium text-pumpkin empty:hidden mt-2">

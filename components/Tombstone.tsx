@@ -128,7 +128,7 @@ export function Tombstone({
       <div className="mound" />
 
       {credit && (
-        <Link href={`/${login}`} prefetch={false} data-track="featured_click" data-track-login={login} data-track-source="famous_grave" className="chip mt-4 inline-flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-1 pr-3 text-sm font-semibold">
+        <Link href={`/${login}`} prefetch={false} data-track="featured_click" data-track-login={login} data-track-source="famous_grave" data-og-warm={login} className="chip mt-4 inline-flex items-center gap-1.5 whitespace-nowrap rounded-full py-1 pl-1 pr-3 text-sm font-semibold">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={`https://github.com/${login}.png?size=48`} alt="" width={22} height={22} loading="lazy" className="size-[22px] rounded-full" />
           @{credit}&apos;s graveyard →

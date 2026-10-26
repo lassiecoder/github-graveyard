@@ -15,4 +15,14 @@ export const SOURCE_REPO = process.env.NEXT_PUBLIC_GITHUB_REPO ?? "lassiecoder/g
 
 // Bump when the share-card design changes: browsers and X cache card images
 // by URL (X for days), so a new version string makes them fetch the new look.
-export const OG_VERSION = "2";
+export const OG_VERSION = "3";
+
+// Share-card URLs, lowercased so a card warmed from what someone typed is the
+// exact URL (and CDN cache entry) the page uses afterwards.
+export function ogCardUrl(login: string, format: "landscape" | "portrait" = "landscape") {
+  return `/api/og/${login.toLowerCase()}?${format === "portrait" ? "format=portrait&" : ""}v=${OG_VERSION}`;
+}
+
+export function ogGraveUrl(login: string, repo: string) {
+  return `/api/og/${login.toLowerCase()}/${encodeURIComponent(repo)}?v=${OG_VERSION}`;
+}

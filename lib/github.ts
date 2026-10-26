@@ -86,36 +86,49 @@ function isRateLimited(res: Response) {
 
 export const USERNAME_RE = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 
+// Remote cache: the page and its share-card route can run on different
+// serverless instances, and an in-memory cache would make each one hit
+// GitHub separately (slower, and it burns the rate limit). On Vercel the
+// remote handler is provided automatically.
 // Errors are thrown (not returned) so transient failures never get cached.
 // The marker is a message, not a subclass, since it may cross a cache boundary.
 async function fetchGraveyard(login: string): Promise<Graveyard | null> {
-  "use cache";
+  "use cache: remote";
   cacheLife("hours");
 
-  const userRes = await gh(`/users/${encodeURIComponent(login)}`);
-  if (userRes.status === 404) return null;
-  if (isRateLimited(userRes)) throw new Error(RATE_LIMITED);
-  if (!userRes.ok) throw new Error(`GitHub ${userRes.status}`);
-  const user = await userRes.json();
-
-  // Least-recently-pushed first: for prolific users the dead are what we want,
-  // and the page cap then cuts off the living rather than the graves.
-  const repos: ApiRepo[] = [];
-  let complete = false;
-  for (let page = 1; page <= MAX_PAGES; page++) {
+  // The profile and the first page of repos don't depend on each other, so
+  // fetch them together; the user's repo count then tells us how many more
+  // pages exist, and those are fetched in parallel too. Sequential requests
+  // were the main cost of a cold graveyard (and of its share card).
+  const repoPage = async (page: number) => {
+    // Least-recently-pushed first: for prolific users the dead are what we
+    // want, and the page cap then cuts off the living rather than the graves.
     const res = await gh(
-      `/users/${encodeURIComponent(user.login)}/repos?per_page=100&page=${page}&type=owner&sort=pushed&direction=asc`,
+      `/users/${encodeURIComponent(login)}/repos?per_page=100&page=${page}&type=owner&sort=pushed&direction=asc`,
     );
     if (isRateLimited(res)) throw new Error(RATE_LIMITED);
     if (!res.ok) throw new Error(`GitHub ${res.status}`);
     const batch: (Omit<ApiRepo, "pushed_at"> & { pushed_at: string | null })[] = await res.json();
     // Never-pushed (empty) repos report pushed_at: null; treat creation as last push.
-    repos.push(...batch.map((r) => ({ ...r, pushed_at: r.pushed_at ?? r.created_at })));
-    if (batch.length < 100) {
-      complete = true;
-      break;
-    }
-  }
+    return batch.map((r) => ({ ...r, pushed_at: r.pushed_at ?? r.created_at }));
+  };
+
+  const [userRes, firstPage] = await Promise.all([
+    gh(`/users/${encodeURIComponent(login)}`),
+    // A missing user 404s here too; the profile response below decides.
+    repoPage(1).catch((e: Error) => (String(e).includes(RATE_LIMITED) ? Promise.reject(e) : null)),
+  ]);
+  if (userRes.status === 404) return null;
+  if (isRateLimited(userRes)) throw new Error(RATE_LIMITED);
+  if (!userRes.ok) throw new Error(`GitHub ${userRes.status}`);
+  const user = await userRes.json();
+
+  const first = firstPage ?? (await repoPage(1));
+  const pages = Math.min(MAX_PAGES, Math.ceil(user.public_repos / 100));
+  const rest = first.length < 100 ? [] : await Promise.all(Array.from({ length: Math.max(0, pages - 1) }, (_, i) => repoPage(i + 2)));
+  const repos: ApiRepo[] = [first, ...rest].flat();
+  // Complete when we stopped on a short page rather than at the page cap.
+  const complete = [first, ...rest].some((b) => b.length < 100) || repos.length >= user.public_repos;
 
   const now = Date.now();
   const own = repos.filter(
@@ -204,7 +217,7 @@ export async function getGraveyard(login: string): Promise<GraveyardResult> {
 // Live star count for the "keep this repo alive" card. Null if the repo is
 // missing or GitHub is unreachable; the card then just hides the count.
 export async function getRepoStars(repo: string): Promise<number | null> {
-  "use cache";
+  "use cache: remote";
   cacheLife("hours");
   try {
     const res = await gh(`/repos/${repo}`);

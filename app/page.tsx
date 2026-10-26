@@ -118,6 +118,7 @@ export default function Home() {
                 data-track="featured_click"
                 data-track-login={d.login}
                 data-track-source="haunt_chip"
+                data-og-warm={d.login}
                 className="chip inline-flex items-center gap-1.5 rounded-full py-1 pl-1 pr-3 text-sm font-semibold"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

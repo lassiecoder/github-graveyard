@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Grave, Graveyard } from "./github";
 import { lifespanLabel, year } from "./format";
+import { Fragment, createElement, isValidElement } from "react";
+import { DiggingSkeleton } from "@/components/DiggingSkeleton";
 import { SITE_HOST } from "./site";
 
 // Satori-only markup: flexbox everywhere, inline styles, no grid, no emoji.
@@ -45,6 +47,29 @@ const C = {
 
 // Same order as components/Tombstone so a grave keeps its color everywhere.
 const STONE_COLORS = ["#a4adb2", "#b7ef9e", "#f06a3a", "#f4ecdf", "#cdbdf3", "#8fa2ab"];
+
+// Satori only accepts intrinsic elements inside <svg>, so expand the
+// skeleton's little helper components (Bone, Curve…) into plain SVG first.
+// They're pure functions of their props, so calling them directly is safe.
+function intrinsic(node: React.ReactNode): React.ReactNode {
+  if (Array.isArray(node)) return node.map(intrinsic);
+  if (!isValidElement(node)) return node;
+  const el = node as React.ReactElement<{ children?: React.ReactNode }>;
+  if (el.type === Fragment) return intrinsic(el.props.children);
+  if (typeof el.type === "function") return intrinsic((el.type as (p: unknown) => React.ReactNode)(el.props));
+  const { children, ...rest } = el.props;
+  return createElement(el.type, { ...rest, key: el.key }, children === undefined ? undefined : intrinsic(children));
+}
+
+// The loading screen's digging skeleton, drawn as a still (Satori renders
+// inline SVG but can't animate).
+export function OgSkeleton({ x, bottom, width }: { x: number; bottom: number; width: number }) {
+  return (
+    <div style={{ position: "absolute", left: x, bottom, display: "flex" }}>
+      {intrinsic(<DiggingSkeleton headstone={false} width={width} />)}
+    </div>
+  );
+}
 
 export const trunc = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
@@ -375,7 +400,7 @@ export function PortraitCard({ g }: { g: Graveyard }) {
     <Dusk>
       <Sparkle size={36} x={940} y={150} />
       <Sparkle size={20} x={985} y={215} />
-      <Spider x={820} width={70} thread={90} />
+      <Spider x={640} width={56} thread={70} />
       <div style={{ display: "flex", flexDirection: "column", width: "100%", padding: "64px 64px 0" }}>
         <Eyebrow avatar={g.avatar} size={22} />
         <div style={{ display: "flex", marginTop: 34 }}>
@@ -417,6 +442,10 @@ export function PortraitCard({ g }: { g: Graveyard }) {
           </div>
         </div>
       </NightPanel>
+      {/* Stands on the panel's top edge, digging into it. */}
+      {/* Feet on the panel's top edge (y = 1350 − 32 − 790 = 528); the art's
+          ground line sits at 251/262 of its height. */}
+      <OgSkeleton x={770} bottom={1350 - 528 - 18} width={270} />
     </Dusk>
   );
 }

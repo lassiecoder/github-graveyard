@@ -8,7 +8,7 @@ import { Ghost, NightEdge, Sparkle, Swirl } from "@/components/Decor";
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, year } from "@/lib/format";
 import { graveTweet, graveUrl, xIntent } from "@/lib/share";
-import { OG_VERSION } from "@/lib/site";
+import { ogGraveUrl, SITE_NAME } from "@/lib/site";
 
 type Props = PageProps<"/[username]/[repo]">;
 
@@ -28,11 +28,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = grave
     ? `Cause of death: ${grave.cause}. From ${login}'s GitHub graveyard.`
     : `From ${login}'s GitHub graveyard.`;
-  const image = { url: `/api/og/${login}/${encodeURIComponent(name)}?v=${OG_VERSION}`, width: 1200, height: 630, alt: title };
+  const image = { url: ogGraveUrl(login, name), width: 1200, height: 630, alt: title };
   return {
     title,
     description,
-    openGraph: { title, description, images: [image] },
+    openGraph: { siteName: SITE_NAME, type: "website", title, description, images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }

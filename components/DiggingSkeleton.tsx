@@ -73,15 +73,36 @@ const CLODS = [
 
 const RIBS = [122, 133, 144, 155];
 
-export function DiggingSkeleton({ className }: { className?: string }) {
+// `headstone={false}` drops the RIP stone, for places that already show
+// graves (the share card). `width` is for the share-card renderer, which
+// draws this as a still and needs an explicit size.
+export function DiggingSkeleton({
+  className,
+  headstone = true,
+  width,
+}: {
+  className?: string;
+  headstone?: boolean;
+  width?: number;
+}) {
   return (
-    <svg viewBox="0 0 250 262" className={className} aria-hidden>
+    <svg
+      viewBox="0 0 250 262"
+      className={className}
+      width={width}
+      height={width ? Math.round((width * 262) / 250) : undefined}
+      aria-hidden
+    >
       {/* Headstone of the grave being dug, ground shadow, hole, dirt heap. */}
-      <path d="M200 250V194c0-12 9-20 20-20s20 8 20 20v56Z" fill="#a4adb2" stroke={INK} strokeWidth="3" />
-      <path d="M205 196c1-9 7-15 15-15" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" fill="none" opacity=".5" />
-      <text x="220" y="212" textAnchor="middle" fontFamily="var(--font-playfair), serif" fontWeight="900" fontSize="12" fill={INK}>
-        RIP
-      </text>
+      {headstone && (
+        <>
+          <path d="M200 250V194c0-12 9-20 20-20s20 8 20 20v56Z" fill="#a4adb2" stroke={INK} strokeWidth="3" />
+          <path d="M205 196c1-9 7-15 15-15" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" fill="none" opacity=".5" />
+          <text x="220" y="212" textAnchor="middle" fontFamily="var(--font-playfair), serif" fontWeight="900" fontSize="12" fill={INK}>
+            RIP
+          </text>
+        </>
+      )}
       <ellipse cx="146" cy="251" rx="58" ry="5" fill={INK} opacity=".18" />
       <ellipse cx="60" cy="248" rx="34" ry="7.5" fill={INK} />
       <path d="M2 252C8 230 30 224 44 252Z" fill={DIRT} />

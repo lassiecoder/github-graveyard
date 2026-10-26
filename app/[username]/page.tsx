@@ -13,7 +13,8 @@ import { Cobweb, Ghost, NightEdge, NightGhosts, Sparkle, Swirl } from "@/compone
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, monthYear } from "@/lib/format";
 import { graveyardTweet, graveyardUrl, xIntent } from "@/lib/share";
-import { OG_VERSION } from "@/lib/site";
+import { ogCardUrl, SITE_NAME } from "@/lib/site";
+import { OgPreview } from "@/components/OgPreview";
 
 export async function generateMetadata({ params }: PageProps<"/[username]">): Promise<Metadata> {
   const { username } = await params;
@@ -23,12 +24,12 @@ export async function generateMetadata({ params }: PageProps<"/[username]">): Pr
   const description = res.ok
     ? `${res.data.graves.length} abandoned side projects. Average lifespan: ${lifespanLabel(res.data.avgLifespanDays)}. Rank: ${res.data.title.rank}.`
     : "Dig up the dead side projects of any GitHub user.";
-  const image = { url: `/api/og/${login}?v=${OG_VERSION}`, width: 1200, height: 630, alt: title };
+  const image = { url: ogCardUrl(login), width: 1200, height: 630, alt: title };
   return {
     title,
     description,
     alternates: { canonical: `/${login}` },
-    openGraph: { title, description, url: `/${login}`, images: [image] },
+    openGraph: { siteName: SITE_NAME, type: "website", title, description, url: `/${login}`, images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
@@ -105,7 +106,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
               <ShareBar
                 login={g.login}
                 url={url}
-                cardUrl={`/api/og/${g.login}?format=portrait&v=${OG_VERSION}`}
+                cardUrl={ogCardUrl(g.login, "portrait")}
                 mineIntent={xIntent(graveyardTweet(g, true), url)}
                 theirsIntent={xIntent(graveyardTweet(g, false), url)}
               />
@@ -114,8 +115,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
 
           <figure className="fade-up relative hidden lg:block" style={{ animationDelay: "150ms" }}>
             <div className="rotate-2 rounded-[26px] bg-paper p-2.5 shadow-[0_30px_60px_-24px_rgba(110,40,0,.6)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/og/${g.login}?v=${OG_VERSION}`} alt={`Share card for ${g.login}'s graveyard`} width={1200} height={630} className="block h-auto w-full rounded-[18px]" />
+              <OgPreview src={ogCardUrl(g.login)} alt={`Share card for ${g.login}'s graveyard`} />
             </div>
             <figcaption className="script mt-5 flex items-center justify-center gap-2 text-3xl text-white">
               <svg width="46" height="30" viewBox="0 0 46 30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>

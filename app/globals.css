@@ -308,6 +308,214 @@ html.ghost-cursor :is(input, textarea, [contenteditable]) {
   opacity: 0;
 }
 
+/* Share-card placeholder (components/OgPreview.tsx): a light sweep across
+   the sketch while the real card renders. */
+.og-sketch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: og-shimmer 1.4s linear infinite;
+}
+
+@keyframes og-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+/* Haunted confirmation popup (components/SpookyToast.tsx): drops from the
+   top on a spider's thread with a springy bounce, sways while it lingers,
+   then gets reeled back up. Sway uses `rotate` so it composes with the
+   drop's `transform`. */
+.spooky-toast {
+  transform-origin: 50% -60px;
+  animation:
+    toast-drop 0.75s cubic-bezier(0.3, 1.55, 0.5, 1) both,
+    toast-sway 2.4s ease-in-out 0.75s infinite;
+}
+
+.spooky-toast.leaving {
+  animation: toast-reel 0.45s cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+
+.toast-thread {
+  background: linear-gradient(to bottom, rgba(244, 236, 223, 0), rgba(244, 236, 223, 0.85) 30%);
+  box-shadow: 0 0 0 0.5px rgba(23, 17, 14, 0.25);
+}
+
+.toast-spider {
+  filter: drop-shadow(0 1px 0 rgba(244, 236, 223, 0.5));
+}
+
+.toast-spider .leg {
+  animation: leg-twitch 1.6s ease-in-out infinite;
+}
+
+.toast-spider .leg-b {
+  animation-delay: -0.8s;
+}
+
+@keyframes toast-drop {
+  from {
+    transform: translateY(-160%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-sway {
+  0%,
+  100% {
+    rotate: -1.6deg;
+  }
+  50% {
+    rotate: 1.6deg;
+  }
+}
+
+@keyframes toast-reel {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-180%);
+  }
+}
+
+/* Download confirmation (components/PeekGhost.tsx): the witch ghost sneaks
+   in from a screen edge, leans in, then slips back out. */
+.peek-left {
+  transform-origin: bottom left;
+  animation: peek-in-left 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.peek-right {
+  transform-origin: bottom right;
+  animation: peek-in-right 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.peek-left.leaving {
+  animation: peek-out-left 0.5s ease-in both;
+}
+
+.peek-right.leaving {
+  animation: peek-out-right 0.5s ease-in both;
+}
+
+.peek-bubble {
+  animation: peek-pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) 0.45s both;
+}
+
+.peek-left .peek-bubble {
+  transform-origin: left center;
+}
+
+.peek-right .peek-bubble {
+  transform-origin: right center;
+}
+
+/* Bats loop around while their wings beat, hinged at the body. */
+.peek-bat {
+  animation: peek-bat-drift 2.2s ease-in-out infinite;
+}
+
+.peek-wing {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  animation: peek-wing-l 0.18s ease-in-out infinite alternate;
+}
+
+.peek-wing-r {
+  animation-name: peek-wing-r;
+}
+
+@keyframes peek-in-left {
+  from {
+    transform: translateX(-110%) rotate(-20deg);
+  }
+  to {
+    transform: translateX(-26%) rotate(6deg);
+  }
+}
+
+@keyframes peek-in-right {
+  from {
+    transform: translateX(110%) rotate(20deg);
+  }
+  to {
+    transform: translateX(26%) rotate(-6deg);
+  }
+}
+
+@keyframes peek-out-left {
+  from {
+    transform: translateX(-26%) rotate(6deg);
+  }
+  to {
+    transform: translateX(-130%) rotate(-16deg);
+  }
+}
+
+@keyframes peek-out-right {
+  from {
+    transform: translateX(26%) rotate(-6deg);
+  }
+  to {
+    transform: translateX(130%) rotate(16deg);
+  }
+}
+
+@keyframes peek-pop {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes peek-wing-l {
+  from {
+    transform: rotate(18deg) scaleY(0.6);
+  }
+  to {
+    transform: rotate(-26deg);
+  }
+}
+
+@keyframes peek-wing-r {
+  from {
+    transform: rotate(-18deg) scaleY(0.6);
+  }
+  to {
+    transform: rotate(26deg);
+  }
+}
+
+@keyframes peek-bat-drift {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: -6deg;
+  }
+  30% {
+    translate: 10px -8px;
+    rotate: 4deg;
+  }
+  65% {
+    translate: -6px -3px;
+    rotate: -2deg;
+  }
+}
+
 /* ───────────── Critters ───────────── */
 
 .twinkle {
