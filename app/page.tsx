@@ -95,9 +95,9 @@ export default function Home() {
             <Sparkle size={30} className="twinkle absolute -left-2 top-[38%] text-white sm:-left-10" />
             <Sparkle size={18} className="twinkle absolute -left-6 top-[58%] text-white sm:-left-16" style={{ animationDelay: "-1s" }} />
             <Sparkle size={26} className="twinkle absolute -right-1 -top-4 text-white sm:-right-8" style={{ animationDelay: "-1.7s" }} />
-            <span className="display block text-[clamp(3.6rem,15vw,8.6rem)]">Every dev</span>
+            <span className="horror block text-[clamp(3.6rem,15vw,8.6rem)]">Every dev</span>
             <span className="script overlay-script -my-[0.2em] text-[clamp(3.4rem,13vw,7.5rem)] normal-case">has a secret</span>
-            <span className="display block text-[clamp(3.1rem,13.4vw,8.6rem)]">graveyard</span>
+            <span className="horror block text-[clamp(3.1rem,13.4vw,8.6rem)]">graveyard</span>
           </h1>
 
           <p className="fade-up mt-8 max-w-xl text-lg font-medium text-ink/80 sm:text-xl" style={{ animationDelay: "160ms" }}>
@@ -139,7 +139,7 @@ export default function Home() {
 
         <div className="relative mx-auto w-full max-w-6xl px-4 pt-16 sm:pt-20">
           <h2 className="text-center uppercase">
-            <span className="display block text-[clamp(2.6rem,8vw,5rem)] text-bone">Famously</span>
+            <span className="horror block text-[clamp(2.6rem,8vw,5rem)] text-bone">Famously</span>
             <span className="script -mt-[0.15em] block -rotate-6 text-[clamp(2.6rem,7vw,4.6rem)] normal-case text-mint">deceased</span>
           </h2>
           <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-16 min-[440px]:grid-cols-2 lg:grid-cols-4">

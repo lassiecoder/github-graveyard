@@ -43,7 +43,7 @@ export function Digging({ login: target }: { login?: string } = {}) {
           <DiggingSkeleton className="w-52 sm:w-64" />
         </div>
         <p className="mt-6 uppercase">
-          <span className="display block text-[clamp(2.6rem,9vw,4.6rem)]">Digging up</span>
+          <span className="horror block text-[clamp(2.6rem,9vw,4.6rem)]">Digging up</span>
           <span className="script overlay-script -mt-1 block break-all text-[clamp(2.6rem,9vw,4.4rem)] normal-case">
             {login ? `@${login}` : "the past"}
           </span>

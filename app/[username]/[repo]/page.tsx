@@ -8,6 +8,7 @@ import { Ghost, NightEdge, Sparkle, Swirl } from "@/components/Decor";
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, year } from "@/lib/format";
 import { graveTweet, graveUrl, xIntent } from "@/lib/share";
+import { OG_VERSION } from "@/lib/site";
 
 type Props = PageProps<"/[username]/[repo]">;
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = grave
     ? `Cause of death: ${grave.cause}. From ${login}'s GitHub graveyard.`
     : `From ${login}'s GitHub graveyard.`;
-  const image = { url: `/api/og/${login}/${encodeURIComponent(name)}`, width: 1200, height: 630, alt: title };
+  const image = { url: `/api/og/${login}/${encodeURIComponent(name)}?v=${OG_VERSION}`, width: 1200, height: 630, alt: title };
   return {
     title,
     description,
@@ -56,7 +57,7 @@ async function GraveView({ params }: { params: Props["params"] }) {
         <TopBar />
         <div className="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-4 py-24 text-center">
           <Ghost color="#b7ef9e" className="float w-24" />
-          <h1 className="display mt-6 text-[clamp(3rem,11vw,5rem)] uppercase">It&apos;s alive!</h1>
+          <h1 className="horror mt-6 text-[clamp(3rem,11vw,5rem)] uppercase">It&apos;s alive!</h1>
           <p className="mt-4 text-lg font-medium text-ink/80">
             {res.ok
               ? `We couldn't find “${decodeURIComponent(repo)}” among ${login}'s dead. Either it's still breathing, or it never existed.`
@@ -77,7 +78,7 @@ async function GraveView({ params }: { params: Props["params"] }) {
         <Sparkle size={24} className="twinkle absolute right-[10%] top-32 text-white" />
         <div className="fade-up relative mx-auto w-full max-w-4xl px-4 pt-12 text-center sm:pt-16">
           <p className="script text-4xl text-white sm:text-5xl">here lies</p>
-          <h1 className="display mt-2 break-words text-[clamp(3rem,10vw,6.4rem)] [overflow-wrap:anywhere]">{grave.name}</h1>
+          <h1 className="horror mt-2 break-words text-[clamp(3rem,10vw,6.4rem)] [overflow-wrap:anywhere]">{grave.name}</h1>
           <p className="mt-4 font-mono text-sm font-medium text-ink/70">
             {year(grave.born)} — {year(grave.died)} · lived {lifespanLabel(grave.lifespanDays)}
           </p>

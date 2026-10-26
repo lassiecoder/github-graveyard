@@ -35,6 +35,7 @@
   --color-bone: var(--bone);
   --color-haze: var(--haze);
   --font-display: var(--font-playfair);
+  --font-horror: var(--font-creepster);
   --font-script: var(--font-sacramento);
   --font-sans: var(--font-bricolage);
   --font-mono: var(--font-jbmono);
@@ -161,6 +162,15 @@ textarea,
   font-weight: 900;
   letter-spacing: -0.035em;
   line-height: 0.84;
+}
+
+/* Horror headlines: dripping monster-movie lettering for the big titles.
+   Body-size text (stats, tombstones) stays in .display for legibility. */
+.horror {
+  font-family: var(--font-creepster), var(--font-playfair), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
 }
 
 .script {

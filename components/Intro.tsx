@@ -154,7 +154,7 @@ export function Intro() {
     <div className="intro" aria-hidden>
       <div className="intro-curtain grain">
         <div className="intro-text px-4 text-center">
-          <p className="display text-[clamp(3.4rem,13vw,8rem)] uppercase">Digging up</p>
+          <p className="horror text-[clamp(3.4rem,13vw,8rem)] uppercase">Digging up</p>
           <p className="script -mt-[0.15em] -rotate-6 text-[clamp(3.2rem,12vw,7rem)] text-pumpkin">the dead</p>
           {QUIPS.map((q, i) => (
             <p key={q} data-i={i} className="intro-quip mt-8 text-lg font-semibold text-ink/75 sm:text-xl">

@@ -10,9 +10,10 @@ import { SITE_HOST } from "./site";
 // script, and a navy "window" holding pastel stones.
 
 const font = (file: string) => readFile(join(process.cwd(), "assets/fonts", file));
-const [playfair, playfairItalic, sacramento, bricolage500, bricolage800, jbmono] = await Promise.all([
+const [playfair, playfairItalic, creepster, sacramento, bricolage500, bricolage800, jbmono] = await Promise.all([
   font("playfair-900.ttf"),
   font("playfair-900i.ttf"),
+  font("creepster-400.ttf"),
   font("sacramento-400.ttf"),
   font("bricolage-500.ttf"),
   font("bricolage-800.ttf"),
@@ -22,6 +23,7 @@ const [playfair, playfairItalic, sacramento, bricolage500, bricolage800, jbmono]
 export const ogFonts = [
   { name: "Playfair", data: playfair, weight: 900 as const, style: "normal" as const },
   { name: "Playfair", data: playfairItalic, weight: 900 as const, style: "italic" as const },
+  { name: "Horror", data: creepster, weight: 400 as const, style: "normal" as const },
   { name: "Script", data: sacramento, weight: 400 as const, style: "normal" as const },
   { name: "Sans", data: bricolage500, weight: 500 as const, style: "normal" as const },
   { name: "Sans", data: bricolage800, weight: 800 as const, style: "normal" as const },
@@ -299,7 +301,7 @@ function Eyebrow({ avatar, size }: { avatar: string; size: number }) {
 function Title({ g, base, rankSize }: { g: Graveyard; base: number; rankSize: number }) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", fontFamily: "Playfair", fontSize: handleSize(g.login, base), lineHeight: 1, letterSpacing: -3 }}>
+      <div style={{ display: "flex", fontFamily: "Horror", fontSize: handleSize(g.login, base), lineHeight: 1, letterSpacing: 1 }}>
         {trunc(g.login, 22)}
       </div>
       <div
@@ -426,7 +428,7 @@ export function GraveCard({ grave, colorIndex }: { grave: Grave; colorIndex: num
       <Sparkle size={16} x={600} y={140} />
       <div style={{ display: "flex", flexDirection: "column", position: "absolute", left: 60, top: 50, width: 640 }}>
         <div style={{ display: "flex", fontFamily: "Script", fontSize: 64, color: "#fff", lineHeight: 1 }}>here lies</div>
-        <div style={{ display: "flex", fontFamily: "Playfair", fontSize: grave.name.length > 16 ? 64 : 84, lineHeight: 1, letterSpacing: -2, marginTop: 4 }}>
+        <div style={{ display: "flex", fontFamily: "Horror", fontSize: grave.name.length > 16 ? 64 : 84, lineHeight: 1, letterSpacing: 1, marginTop: 4 }}>
           {trunc(grave.name, 28)}
         </div>
         <div style={{ display: "flex", fontFamily: "Mono", fontSize: 24, opacity: 0.7, marginTop: 16 }}>

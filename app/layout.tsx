@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Bricolage_Grotesque, JetBrains_Mono, Playfair_Display, Sacramento } from "next/font/google";
+import { Bricolage_Grotesque, Creepster, JetBrains_Mono, Playfair_Display, Sacramento } from "next/font/google";
 import { GhostCursor } from "@/components/GhostCursor";
 import { SvgDefs } from "@/components/Decor";
 import { INTRO_SCRIPT, Intro } from "@/components/Intro";
@@ -14,6 +14,12 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["700", "900"],
   style: ["normal", "italic"],
+});
+
+const creepster = Creepster({
+  variable: "--font-creepster",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const sacramento = Sacramento({
@@ -53,7 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${playfair.variable} ${sacramento.variable} ${bricolage.variable} ${jbmono.variable} antialiased`}
+      className={`${playfair.variable} ${creepster.variable} ${sacramento.variable} ${bricolage.variable} ${jbmono.variable} antialiased`}
     >
       <head>
         {/* Picks the intro's direction and line before first paint. */}

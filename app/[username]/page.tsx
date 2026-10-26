@@ -13,6 +13,7 @@ import { Cobweb, Ghost, NightEdge, NightGhosts, Sparkle, Swirl } from "@/compone
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, monthYear } from "@/lib/format";
 import { graveyardTweet, graveyardUrl, xIntent } from "@/lib/share";
+import { OG_VERSION } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[username]">): Promise<Metadata> {
   const { username } = await params;
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/[username]">): Pr
   const description = res.ok
     ? `${res.data.graves.length} abandoned side projects. Average lifespan: ${lifespanLabel(res.data.avgLifespanDays)}. Rank: ${res.data.title.rank}.`
     : "Dig up the dead side projects of any GitHub user.";
-  const image = { url: `/api/og/${login}`, width: 1200, height: 630, alt: title };
+  const image = { url: `/api/og/${login}?v=${OG_VERSION}`, width: 1200, height: 630, alt: title };
   return {
     title,
     description,
@@ -88,7 +89,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
               <p className="text-base font-semibold text-ink/75 sm:text-lg">Here lie the side projects of</p>
             </div>
             <h1 className="mt-5">
-              <span className="display block break-words text-[clamp(3rem,10vw,6.4rem)] [overflow-wrap:anywhere]">{g.login}</span>
+              <span className="horror block break-words text-[clamp(3rem,10vw,6.4rem)] [overflow-wrap:anywhere]">{g.login}</span>
               <span className="script overlay-script -mt-[0.1em] ml-[4%] text-[clamp(2.6rem,7.5vw,4.6rem)]">{g.title.rank}</span>
             </h1>
             <p className="mt-4 max-w-lg text-lg font-medium text-ink/80">{g.title.blurb}</p>
@@ -104,7 +105,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
               <ShareBar
                 login={g.login}
                 url={url}
-                cardUrl={`/api/og/${g.login}?format=portrait`}
+                cardUrl={`/api/og/${g.login}?format=portrait&v=${OG_VERSION}`}
                 mineIntent={xIntent(graveyardTweet(g, true), url)}
                 theirsIntent={xIntent(graveyardTweet(g, false), url)}
               />
@@ -114,7 +115,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
           <figure className="fade-up relative hidden lg:block" style={{ animationDelay: "150ms" }}>
             <div className="rotate-2 rounded-[26px] bg-paper p-2.5 shadow-[0_30px_60px_-24px_rgba(110,40,0,.6)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/og/${g.login}`} alt={`Share card for ${g.login}'s graveyard`} width={1200} height={630} className="block h-auto w-full rounded-[18px]" />
+              <img src={`/api/og/${g.login}?v=${OG_VERSION}`} alt={`Share card for ${g.login}'s graveyard`} width={1200} height={630} className="block h-auto w-full rounded-[18px]" />
             </div>
             <figcaption className="script mt-5 flex items-center justify-center gap-2 text-3xl text-white">
               <svg width="46" height="30" viewBox="0 0 46 30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
@@ -137,7 +138,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
           {n ? (
             <>
               <h2 className="text-center">
-                <span className="display block text-[clamp(2.6rem,8vw,4.6rem)] uppercase text-bone">
+                <span className="horror block text-[clamp(2.6rem,8vw,4.6rem)] uppercase text-bone">
                   {n} {n === 1 ? "grave" : "graves"}
                 </span>
                 {g.oldestGrave && (
@@ -156,7 +157,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
           ) : (
             <div className="mx-auto max-w-lg text-center">
               <Ghost color="#b7ef9e" className="float mx-auto w-28" />
-              <p className="display mt-6 text-4xl leading-tight! tracking-[-0.02em]! text-bone">Not a single grave.</p>
+              <p className="horror mt-6 text-4xl leading-tight! text-bone">Not a single grave.</p>
               <p className="mt-3 text-lg text-haze">Every repo is alive and kicking. We don&apos;t trust it, but we respect it.</p>
             </div>
           )}
@@ -173,7 +174,7 @@ function RoastAFriend() {
   return (
     <section className="mx-auto mt-24 w-full max-w-md text-center">
       <h3 className="uppercase">
-        <span className="display block text-4xl text-bone sm:text-5xl">Now roast</span>
+        <span className="horror block text-4xl text-bone sm:text-5xl">Now roast</span>
         <span className="script -mt-1 block -rotate-6 text-5xl normal-case text-mint sm:text-6xl">a friend</span>
       </h3>
       <DigForm variant="friend" className="mt-8 rotate-1" />
@@ -205,7 +206,7 @@ function Unearthly({ reason, login }: { reason: "not-found" | "rate-limited" | "
       <TopBar />
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-4 py-20 text-center">
         <Ghost color="#fffaf3" className="float w-24" />
-        <h1 className="display mt-6 text-[clamp(3rem,11vw,5rem)] uppercase">{copy.title}</h1>
+        <h1 className="horror mt-6 text-[clamp(3rem,11vw,5rem)] uppercase">{copy.title}</h1>
         <p className="mt-4 text-lg font-medium text-ink/80">{copy.body}</p>
         <DigForm autoFocus className="mt-10 -rotate-1" />
         <Link href="/" className="mt-6 text-sm font-semibold underline-offset-4 hover:underline">← back to the gates</Link>

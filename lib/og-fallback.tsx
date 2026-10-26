@@ -25,11 +25,11 @@ export function HomeCard() {
       <Sparkle size={18} x={44} y={240} />
       <Sparkle size={24} x={660} y={360} />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "absolute", left: 40, top: 70, width: 660 }}>
-        <div style={{ display: "flex", fontFamily: "Playfair", fontSize: 112, lineHeight: 0.9, letterSpacing: -4 }}>EVERY DEV</div>
-        <div style={{ display: "flex", fontFamily: "Script", fontSize: 96, lineHeight: 1, color: "#fff", marginTop: -26, marginBottom: -30, transform: "rotate(-7deg)" }}>
+        <div style={{ display: "flex", fontFamily: "Horror", fontSize: 108, lineHeight: 0.9, letterSpacing: 2 }}>EVERY DEV</div>
+        <div style={{ display: "flex", fontFamily: "Script", fontSize: 96, lineHeight: 1, color: "#fff", marginTop: -18, marginBottom: -12, transform: "rotate(-7deg)" }}>
           has a secret
         </div>
-        <div style={{ display: "flex", fontFamily: "Playfair", fontSize: 100, lineHeight: 0.9, letterSpacing: -4 }}>GRAVEYARD</div>
+        <div style={{ display: "flex", fontFamily: "Horror", fontSize: 100, lineHeight: 0.9, letterSpacing: 2 }}>GRAVEYARD</div>
         <div style={{ display: "flex", fontSize: 26, fontWeight: 500, opacity: 0.8, marginTop: 30, width: 560, textAlign: "center", justifyContent: "center" }}>
           Enter a GitHub username. Get a tombstone for every dead repo.
         </div>
