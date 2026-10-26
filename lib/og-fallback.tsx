@@ -34,7 +34,7 @@ export function HomeCard() {
           Enter a GitHub username. Get a tombstone for every dead repo.
         </div>
       </div>
-      <div style={{ position: "absolute", left: 60, bottom: 44, display: "flex" }}>
+      <div style={{ position: "absolute", left: 60, bottom: 110, display: "flex" }}>
         <Footer />
       </div>
       <NightPanel style={{ right: 32, top: 32, bottom: 32, width: 400 }}>

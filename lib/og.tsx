@@ -71,6 +71,48 @@ export function OgSkeleton({ x, bottom, width }: { x: number; bottom: number; wi
   );
 }
 
+// A skeleton sneaking a look over the top of a tombstone. The skull is
+// drawn behind the stone (so the stone hides its jaw) and the bony fingers in
+// front, gripping the stone's top edge.
+const SK_INK = "#17110e";
+const SK_BONE = "#fbf7ef";
+
+export function PeekSkull({ x, y, size }: { x: number; y: number; size: number }) {
+  return (
+    <svg width={size} height={size * 0.9} viewBox="0 0 100 90" style={{ position: "absolute", left: x, top: y }}>
+      <path
+        d="M50 6C74 6 92 22 92 46 92 60 86 70 78 76V90H22V76C14 70 8 60 8 46 8 22 26 6 50 6Z"
+        fill={SK_BONE}
+        stroke={SK_INK}
+        strokeWidth="4"
+      />
+      <path d="M86 30C90 40 90 54 82 64 80 52 82 40 86 30Z" fill="#e4dccd" />
+      <path d="M20 30Q30 23 40 29M60 29Q70 23 80 30" stroke={SK_INK} strokeWidth="3" strokeLinecap="round" fill="none" />
+      <ellipse cx="34" cy="48" rx="11" ry="12" fill={SK_INK} />
+      <ellipse cx="66" cy="48" rx="11" ry="12" fill={SK_INK} />
+      <circle cx="38" cy="44" r="2.6" fill="#fff" />
+      <circle cx="70" cy="44" r="2.6" fill="#fff" />
+      <path d="M50 60c-3 0-6 4-3 7l3 2 3-2c3-3 0-7-3-7Z" fill={SK_INK} />
+    </svg>
+  );
+}
+
+export function PeekFingers({ x, y, size }: { x: number; y: number; size: number }) {
+  const hand = (cx: number) =>
+    [-9, -3, 3, 9].map((dx) => (
+      <g key={cx + dx}>
+        <path d={`M${cx + dx} 4V22`} stroke={SK_INK} strokeWidth="8.5" strokeLinecap="round" />
+        <path d={`M${cx + dx} 4V22`} stroke={SK_BONE} strokeWidth="4.5" strokeLinecap="round" />
+      </g>
+    ));
+  return (
+    <svg width={size} height={size * 0.3} viewBox="0 0 100 30" style={{ position: "absolute", left: x, top: y }}>
+      {hand(22)}
+      {hand(78)}
+    </svg>
+  );
+}
+
 export const trunc = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
 export function avatarSrc(url: string, size = 200) {
@@ -360,11 +402,16 @@ export function LandscapeCard({ g }: { g: Graveyard }) {
   // Tallest stone in the middle reads like a little skyline.
   const order = top.length === 3 ? [1, 0, 2] : top.map((_, i) => i);
   const heights = top.length === 3 ? [300, 360, 280] : [340, 300];
+  // Where the tallest stone's top edge sits inside the panel, for the
+  // skeleton peeking over it (panel is 566 tall, stones stand 34 from its
+  // bottom, 150 wide, centred with 12px gaps).
+  const tallest = Math.max(...heights.slice(0, top.length));
+  const peekCentre = top.length === 3 ? 245 : top.length === 2 ? 245 - 81 : 245;
+  const stoneTop = 566 - 34 - tallest;
   return (
     <Dusk>
       <Sparkle size={30} x={600} y={120} />
       <Sparkle size={18} x={630} y={170} />
-      <Sparkle size={22} x={520} y={540} />
       <div style={{ display: "flex", flexDirection: "column", padding: "52px 0 0 60px", width: 640 }}>
         <Eyebrow avatar={g.avatar} size={18} />
         <div style={{ display: "flex", marginTop: 28 }}>
@@ -375,11 +422,14 @@ export function LandscapeCard({ g }: { g: Graveyard }) {
           <Sticker value={g.graves.length ? lifespanLabel(g.avgLifespanDays) : "—"} label="avg lifespan" tilt={1.5} />
         </div>
       </div>
-      <div style={{ position: "absolute", left: 60, bottom: 44, display: "flex" }}>
+      {/* Lifted clear of the title label X overlays on the bottom-left. */}
+      <div style={{ position: "absolute", left: 60, bottom: 110, display: "flex" }}>
         <Footer />
       </div>
+      <OgSkeleton x={452} bottom={102} width={196} />
       <NightPanel style={{ right: 32, top: 32, bottom: 32, width: 490 }}>
         <OgGhost color={C.mint} width={80} style={{ right: 26, top: 60, transform: "rotate(12deg)" }} />
+        {top.length > 0 && <PeekSkull x={peekCentre - 34} y={stoneTop - 46} size={68} />}
         <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 12 }}>
           {top.length ? (
             order.map((idx, i) => (
@@ -389,6 +439,7 @@ export function LandscapeCard({ g }: { g: Graveyard }) {
             <Empty size={40} />
           )}
         </div>
+        {top.length > 0 && <PeekFingers x={peekCentre - 50} y={stoneTop - 12} size={100} />}
       </NightPanel>
     </Dusk>
   );
@@ -468,14 +519,17 @@ export function GraveCard({ grave, colorIndex }: { grave: Grave; colorIndex: num
           {trunc(grave.cause, 70)}
         </div>
       </div>
-      <div style={{ position: "absolute", left: 60, bottom: 44, display: "flex" }}>
+      <div style={{ position: "absolute", left: 60, bottom: 110, display: "flex" }}>
         <Footer />
       </div>
       <NightPanel style={{ right: 32, top: 32, bottom: 32, width: 420 }}>
         <OgGhost color={colorIndex % STONE_COLORS.length === 1 ? "#f4ecdf" : C.mint} width={90} style={{ right: 36, top: 70, transform: "rotate(14deg)" }} />
+        {/* Panel is 566 tall and 420 wide; the stone is centred, 420 tall, 34 up. */}
+        <PeekSkull x={210 - 40} y={566 - 34 - 420 - 54} size={80} />
         <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, display: "flex", justifyContent: "center" }}>
           <OgStone grave={grave} colorIndex={colorIndex} width={290} height={420} scale={1.1} />
         </div>
+        <PeekFingers x={210 - 60} y={566 - 34 - 420 - 14} size={120} />
       </NightPanel>
     </Dusk>
   );
