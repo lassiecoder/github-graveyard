@@ -1,26 +1,908 @@
 @import "tailwindcss";
 
+/* Dusk-peach up top, graveyard-navy below: palette lifted from the reference
+   reels (orange "haunt it" story + the grainy pastel ghosts on slate). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --peach-hi: #ffd2a8;
+  --peach: #ffb07f;
+  --coral: #ff9473;
+  --paper: #fffaf3;
+  --ink: #17110e;
+  --night: #1c2b33;
+  --night-deep: #131f26;
+  --night-swirl: #24363f;
+  --mint: #b7ef9e;
+  --pumpkin: #f06a3a;
+  --mist: #a4adb2;
+  --bone: #f4ecdf;
+  --lilac: #cdbdf3;
+  --haze: #8fa2ab;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-peach-hi: var(--peach-hi);
+  --color-peach: var(--peach);
+  --color-coral: var(--coral);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-night: var(--night);
+  --color-night-deep: var(--night-deep);
+  --color-night-swirl: var(--night-swirl);
+  --color-mint: var(--mint);
+  --color-pumpkin: var(--pumpkin);
+  --color-mist: var(--mist);
+  --color-bone: var(--bone);
+  --color-haze: var(--haze);
+  --font-display: var(--font-playfair);
+  --font-script: var(--font-sacramento);
+  --font-sans: var(--font-bricolage);
+  --font-mono: var(--font-jbmono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--night);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-bricolage), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--peach);
+}
+
+/* In the base layer so utilities like outline-none can still opt out. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .night :focus-visible {
+    outline-color: var(--mint);
+  }
+}
+
+/* ───────────── Sections ───────────── */
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--grain);
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+}
+
+.dusk {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(80% 60% at 15% 0%, var(--peach-hi) 0%, transparent 60%),
+    radial-gradient(70% 70% at 100% 100%, var(--coral) 0%, transparent 65%),
+    linear-gradient(170deg, #ffc08f 0%, var(--peach) 45%, #ffa47c 100%);
+  background-size: 140% 140%;
+  animation: dusk-shift 18s ease-in-out infinite alternate;
+}
+
+@keyframes dusk-shift {
+  to {
+    background-position: 100% 60%;
+  }
+}
+
+.night {
+  position: relative;
+  isolation: isolate;
+  background: var(--night);
+  color: var(--bone);
+}
+
+.night.grain::after,
+.night-edge::after {
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}
+
+/* Scalloped top of the night section. Drawn as navy + the same grain overlay
+   (not a flat SVG fill) so it matches the section below with no seam. */
+.night-edge {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 50px;
+  transform: translateY(calc(-100% + 1px));
+  background: var(--night);
+  isolation: isolate;
+  pointer-events: none;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'><path d='M0 60C160 10 280 80 440 50S700 0 860 40 1160 90 1300 46 1440 30 1440 30V90H0Z'/></svg>") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'><path d='M0 60C160 10 280 80 440 50S700 0 860 40 1160 90 1300 46 1440 30 1440 30V90H0Z'/></svg>") 0 0 / 100% 100% no-repeat;
+}
+
+.night-edge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+}
+
+@media (min-width: 640px) {
+  .night-edge {
+    height: 90px;
+  }
+}
+
+/* The path fades in below the wavy edge instead of starting on a hard line. */
+.swirl {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 280px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 280px);
+}
+
+/* ───────────── Type ───────────── */
+
+.display {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.84;
+}
+
+.script {
+  font-family: var(--font-sacramento), cursive;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* White script laid over black display type, as in "IF YOU'VE got it HAUNT IT". */
+.overlay-script {
+  position: relative;
+  z-index: 2;
+  display: block;
+  color: #fff;
+  transform: rotate(-7deg);
+  text-shadow: 0 2px 18px rgba(120, 40, 0, 0.18);
+}
+
+/* ───────────── Controls ───────────── */
+
+.notify {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 28px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 24px 50px -18px rgba(110, 40, 0, 0.45),
+    0 2px 6px rgba(110, 40, 0, 0.12);
+}
+
+.night .notify {
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+.btn-ink {
+  background: var(--ink);
+  color: var(--paper);
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.btn-ink:hover {
+  background: #2d221c;
+  transform: translateY(-1px);
+}
+
+.btn-ink:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-paper {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 6px 16px -8px rgba(110, 40, 0, 0.35);
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.btn-paper:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-mint {
+  background: var(--mint);
+  color: var(--ink);
+  transition: transform 0.15s ease, filter 0.2s;
+}
+
+.btn-mint:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.chip {
+  border: 1.5px solid color-mix(in srgb, var(--ink) 70%, transparent);
+  transition: background 0.2s, color 0.2s;
+}
+
+.chip:hover {
+  background: var(--ink);
+  color: var(--peach);
+}
+
+.night .chip {
+  border-color: rgba(244, 236, 223, 0.25);
+}
+
+.night .chip:hover {
+  background: var(--bone);
+  color: var(--night);
+}
+
+.sticker {
+  background: var(--paper);
+  border-radius: 20px;
+  box-shadow: 0 14px 30px -16px rgba(110, 40, 0, 0.5);
+}
+
+/* ───────────── Ghost cursor (components/GhostCursor.tsx) ───────────── */
+
+html.ghost-cursor,
+html.ghost-cursor * {
+  cursor: none !important;
+}
+
+html.ghost-cursor :is(input, textarea, [contenteditable]) {
+  cursor: text !important;
+}
+
+.ghost-pointer svg {
+  transform-origin: 13px 2px;
+  transition: transform 0.18s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.2s;
+}
+
+.ghost-pointer[data-state="hover"] svg {
+  transform: scale(1.3);
+}
+
+.ghost-mouth {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.18s;
+}
+
+.ghost-pointer[data-state="hover"] .ghost-mouth {
+  transform: scaleY(1.35);
+}
+
+.ghost-pointer.pressed svg {
+  transform: scale(0.85);
+}
+
+.ghost-pointer[data-state="text"] svg,
+.ghost-pointer[data-state="away"] svg {
+  opacity: 0;
+}
+
+/* ───────────── Critters ───────────── */
+
+.twinkle {
+  animation: twinkle 2.6s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    transform: scale(0.55) rotate(20deg);
+    opacity: 0.6;
+  }
+}
+
+.spider-hang {
+  animation: spider-bob 5.5s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+  transform-origin: top center;
+}
+
+@keyframes spider-bob {
+  0%,
+  100% {
+    transform: translateY(-14%);
+  }
+  45% {
+    transform: translateY(4%) rotate(2deg);
+  }
+  60% {
+    transform: translateY(0%) rotate(-1deg);
+  }
+}
+
+/* Each leg pivots at its hip (set inline, in viewBox units). */
+.leg {
+  transform-box: view-box;
+}
+
+.spider-hang .leg {
+  animation: leg-twitch 3.2s ease-in-out infinite;
+}
+
+.spider-hang .leg-b {
+  animation-delay: -1.6s;
+}
+
+@keyframes leg-twitch {
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+/* Size, path and step length are set inline by components/Crawler.tsx. */
+.spider-crawl {
+  offset-rotate: auto 90deg;
+  offset-distance: 0;
+}
+
+/* Alternating tetrapod gait: the two leg sets swing in opposite phase. */
+.spider-crawl .leg {
+  animation: leg-step var(--step, 0.13s) ease-in-out infinite alternate paused;
+}
+
+.spider-crawl .leg-b {
+  animation-delay: calc(var(--step, 0.13s) * -1);
+}
+
+.spider-crawl.walking .leg {
+  animation-play-state: running;
+}
+
+.spider-crawl svg {
+  transition: transform 0.2s;
+}
+
+.spider-crawl.walking svg {
+  animation: scuttle calc(var(--step, 0.13s) * 2) linear infinite;
+}
+
+@keyframes leg-step {
+  from {
+    transform: rotate(-13deg);
+  }
+  to {
+    transform: rotate(13deg);
+  }
+}
+
+@keyframes scuttle {
+  25% {
+    transform: rotate(2.5deg) translateY(-0.5px);
+  }
+  75% {
+    transform: rotate(-2.5deg) translateY(0.5px);
+  }
+}
+
+.ghost-bob {
+  animation: ghost-bob 4.5s ease-in-out infinite;
+}
+
+@keyframes ghost-bob {
+  50% {
+    translate: 0 -14px;
+  }
+}
+
+/* ───────────── Star card (components/StarCard.tsx) ───────────── */
+
+.star-ghost {
+  transform: translateY(-34%) rotate(10deg);
+  transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.star-card:hover .star-ghost,
+.star-card:focus-within .star-ghost {
+  transform: translateY(-74%) rotate(16deg);
+}
+
+.slime {
+  transform-origin: top;
+  animation: ooze 4.5s ease-in-out infinite;
+}
+
+@keyframes ooze {
+  50% {
+    transform: scaleY(1.3);
+  }
+}
+
+.star-btn {
+  transition: transform 0.15s ease, background 0.2s, box-shadow 0.3s;
+}
+
+.star-btn:hover,
+.star-btn:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(183, 239, 158, 0.35),
+    0 0 30px 4px rgba(183, 239, 158, 0.45);
+}
+
+.star-card:hover .star-icon,
+.star-btn:focus-visible .star-icon {
+  color: var(--mint);
+  animation: twinkle 1.2s ease-in-out infinite;
+}
+
+/* ───────────── Digging skeleton (components/DiggingSkeleton.tsx) ───────────── */
+
+/* 1.4s cycle: push the shovel in (squat), lever it up and fling (~60%, when
+   the clods fly), settle. Arms + shovel pivot between the shoulders. */
+.skel-dig {
+  transform-box: view-box;
+  transform-origin: 141px 118px;
+  animation: skel-dig 1.4s ease-in-out infinite;
+}
+
+.skel-body {
+  animation: skel-squat 1.4s ease-in-out infinite;
+}
+
+.skel-head {
+  transform-box: view-box;
+  transform-origin: 141px 104px;
+  animation: skel-head 1.4s ease-in-out infinite;
+}
+
+.skel-dirt {
+  animation-duration: 1.4s;
+}
+
+@keyframes skel-dig {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-5deg);
+  }
+  60% {
+    transform: rotate(16deg);
+  }
+  74% {
+    transform: rotate(13deg);
+  }
+}
+
+@keyframes skel-squat {
+  30% {
+    transform: translateY(4px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes skel-head {
+  30% {
+    transform: rotate(2deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* ───────────── First-load intro (components/Intro.tsx) ───────────── */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: hidden;
+  /* Gone (and click-through) once the broom has swept past. */
+  animation: intro-gone 0s linear 3s forwards;
+}
+
+/* Cream like the reference illustration, so the sweep visibly reveals the
+   peach page underneath. */
+.intro-curtain {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background: var(--bone);
+  color: var(--ink);
+  -webkit-mask-image: linear-gradient(to right, transparent 47%, #000 53%);
+  mask-image: linear-gradient(to right, transparent 47%, #000 53%);
+  -webkit-mask-size: 220% 100%;
+  mask-size: 220% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  animation: intro-wipe-ltr 2.1s cubic-bezier(0.5, 0.05, 0.45, 1) 0.85s forwards;
+}
+
+.intro-text {
+  animation: fade-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* One random line per load; the first one without JS. */
+.intro-quip {
+  display: none;
+}
+
+html:not([data-quip]) .intro-quip[data-i="0"],
+html[data-quip="0"] .intro-quip[data-i="0"],
+html[data-quip="1"] .intro-quip[data-i="1"],
+html[data-quip="2"] .intro-quip[data-i="2"],
+html[data-quip="3"] .intro-quip[data-i="3"],
+html[data-quip="4"] .intro-quip[data-i="4"] {
+  display: block;
+}
+
+.intro-flyer {
+  position: absolute;
+  top: 7%;
+  left: 0;
+  width: min(420px, 78vw);
+  animation: intro-fly-ltr 2.1s cubic-bezier(0.5, 0.05, 0.45, 1) 0.85s both;
+}
+
+.intro-bob {
+  animation: intro-bob 0.5s ease-in-out infinite alternate;
+}
+
+html[data-intro="rtl"] .intro-curtain {
+  -webkit-mask-image: linear-gradient(to left, transparent 47%, #000 53%);
+  mask-image: linear-gradient(to left, transparent 47%, #000 53%);
+  -webkit-mask-position: 0% 0;
+  mask-position: 0% 0;
+  animation-name: intro-wipe-rtl;
+}
+
+/* Broom trail: streaks stream back, dust drifts off, sparkles pulse, and the
+   bristles flutter in the wind. */
+.intro-streak {
+  stroke-dasharray: 14 10;
+  animation: intro-streak 0.36s linear infinite;
+  opacity: 0.55;
+}
+
+.intro-dust {
+  animation: intro-dust 0.6s ease-out infinite;
+}
+
+.intro-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: twinkle 0.9s ease-in-out infinite;
+}
+
+.intro-bristles {
+  transform-box: fill-box;
+  transform-origin: 100% 40%;
+  animation: intro-flutter 0.18s ease-in-out infinite alternate;
+}
+
+/* Paths start at the broom, so a negative offset streams the dashes away. */
+@keyframes intro-streak {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes intro-dust {
+  from {
+    opacity: 0.9;
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-46px, 6px);
+  }
+}
+
+@keyframes intro-flutter {
+  from {
+    transform: rotate(-2.5deg) skewY(1deg);
+  }
+  to {
+    transform: rotate(2.5deg) skewY(-1deg);
+  }
+}
+
+html[data-intro="rtl"] .intro-flyer {
+  left: auto;
+  right: 0;
+  animation-name: intro-fly-rtl;
+}
+
+html[data-intro="rtl"] .intro-bob svg {
+  transform: scaleX(-1);
+}
+
+html.intro-skip .intro {
+  display: none;
+}
+
+/* The curtain fades out behind a soft, feathered edge rather than a hard line:
+   a wide mask (transparent → opaque with a ~13% ramp) slides across. */
+@keyframes intro-wipe-ltr {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+}
+
+@keyframes intro-wipe-rtl {
+  from {
+    -webkit-mask-position: 0% 0;
+    mask-position: 0% 0;
+  }
+  to {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+}
+
+@keyframes intro-fly-ltr {
+  from {
+    transform: translateX(-100%) rotate(-4deg);
+  }
+  to {
+    transform: translateX(100vw) rotate(-10deg);
+  }
+}
+
+@keyframes intro-fly-rtl {
+  from {
+    transform: translateX(100%) rotate(4deg);
+  }
+  to {
+    transform: translateX(-100vw) rotate(10deg);
+  }
+}
+
+@keyframes intro-bob {
+  to {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes intro-gone {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* ───────────── Tombstone ───────────── */
+
+.plot {
+  --i: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: rise 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+  animation-delay: calc(min(var(--i), 18) * 70ms);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(46px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stone-wrap {
+  position: relative;
+  width: 100%;
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  transform: rotate(calc(var(--tilt, 0) * 1deg));
+}
+
+.plot:hover .stone-wrap,
+.plot:focus-within .stone-wrap {
+  transform: rotate(0deg) translateY(-6px);
+}
+
+/* A ghost waits behind every stone and peeks out on hover. */
+.peeker {
+  position: absolute;
+  right: 6%;
+  top: 40px;
+  width: 34%;
+  max-width: 92px;
+  z-index: 0;
+  transform: translateY(30%) rotate(8deg);
+  transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.plot:hover .peeker,
+.plot:focus-within .peeker {
+  transform: translateY(-78%) rotate(16deg);
+}
+
+.stone {
+  --c: var(--mist);
+  position: relative;
+  z-index: 1;
+  min-height: 300px;
+  padding: 46px 18px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--ink);
+  background:
+    radial-gradient(80% 50% at 25% 8%, rgba(255, 255, 255, 0.45), transparent 70%),
+    linear-gradient(180deg, transparent 70%, rgba(0, 0, 0, 0.08)),
+    var(--c);
+  overflow: hidden;
+}
+
+/* Stipple grain, like the risograph ghosts in the reference. */
+.stone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 9 -4.7'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  -webkit-mask-image: linear-gradient(170deg, #000 0%, transparent 60%);
+  mask-image: linear-gradient(170deg, #000 0%, transparent 60%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.stone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 9 -5'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 12%);
+  mask-image: linear-gradient(0deg, #000 0%, transparent 12%);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.stone > * {
+  position: relative;
+  z-index: 1;
+}
+
+.shape-round {
+  border-radius: 50% 50% 10px 10px / 110px 110px 10px 10px;
+}
+
+.shape-gothic {
+  border-radius: 10px;
+  clip-path: polygon(0 24%, 12% 11%, 30% 4%, 50% 0, 70% 4%, 88% 11%, 100% 24%, 100% 100%, 0 100%);
+  padding-top: 64px;
+}
+
+.shape-cross,
+.shape-slab {
+  border-radius: 22px 22px 8px 8px;
+}
+
+.mound {
+  width: 120%;
+  height: 22px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--night-deep);
+  position: relative;
+  z-index: 2;
+}
+
+.mound::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: -9px;
+  height: 12px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='12' viewBox='0 0 40 12'><path d='M2 12 L4 4 L6 12 M9 12 L12 1 L13 12 M17 12 L18 5 L21 12 M25 12 L28 0 L29 12 M33 12 L35 4 L38 12' stroke='%23131f26' stroke-width='2' fill='none'/></svg>") repeat-x;
+  background-size: 40px 12px;
+}
+
+/* ───────────── Misc ───────────── */
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.shovel {
+  animation: dig 1.1s ease-in-out infinite;
+  transform-origin: 80% 20%;
+}
+
+@keyframes dig {
+  0%,
+  100% {
+    transform: rotate(-18deg) translateY(0);
+  }
+  45% {
+    transform: rotate(14deg) translateY(10px);
+  }
+}
+
+.dirt {
+  animation: dirt 1.1s ease-out infinite;
+}
+
+@keyframes dirt {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 20px), -40px);
+  }
+}
+
+.respect {
+  position: fixed;
+  pointer-events: none;
+  font-family: var(--font-playfair);
+  font-weight: 900;
+  color: var(--mint);
+  text-shadow: 0 0 18px rgba(183, 239, 158, 0.6);
+  animation: respect 1.6s ease-out forwards;
+  z-index: 60;
+}
+
+@keyframes respect {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-160px) scale(1.4);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .spider-crawl,
+  .intro {
+    display: none;
+  }
 }
