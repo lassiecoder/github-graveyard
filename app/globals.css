@@ -48,6 +48,17 @@ body {
   color: var(--ink);
   font-family: var(--font-bricolage), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* No text selection anywhere; drags and taps feel like an app. */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ...except where people type or paste. */
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 ::selection {
