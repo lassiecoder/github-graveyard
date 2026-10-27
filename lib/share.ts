@@ -1,11 +1,14 @@
 import type { Grave, Graveyard } from "./github";
 import { lifespanLabel, year } from "./format";
-import { SITE_URL } from "./site";
+import { OG_VERSION, SITE_URL } from "./site";
 import { xHandleFor } from "./devs";
 
-export const graveyardUrl = (login: string) => `${SITE_URL}/${login}`;
+// Shared links carry the card version: X caches a link's preview card by the
+// posted URL for days, so a new version makes it fetch the new design. The
+// page ignores the parameter (and its canonical URL leaves it out).
+export const graveyardUrl = (login: string) => `${SITE_URL}/${login}?v=${OG_VERSION}`;
 export const graveUrl = (login: string, repo: string) =>
-  `${SITE_URL}/${login}/${encodeURIComponent(repo)}`;
+  `${SITE_URL}/${login}/${encodeURIComponent(repo)}?v=${OG_VERSION}`;
 
 export function xIntent(text: string, url: string) {
   const params = new URLSearchParams({ text, url });

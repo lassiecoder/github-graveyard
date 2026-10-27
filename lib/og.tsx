@@ -426,7 +426,10 @@ export function LandscapeCard({ g }: { g: Graveyard }) {
       <div style={{ position: "absolute", left: 60, bottom: 110, display: "flex" }}>
         <Footer />
       </div>
-      <OgSkeleton x={452} bottom={102} width={196} />
+      {/* Stands on the footer pill, digging into it ("dig up yours"), so a long
+          site domain in the pill can't run into him. Pill: 110 up, ~46 tall;
+          the art's ground line is ~7px above its bottom at this size. */}
+      <OgSkeleton x={440} bottom={110 + 46 - 7} width={170} />
       <NightPanel style={{ right: 32, top: 32, bottom: 32, width: 490 }}>
         <OgGhost color={C.mint} width={80} style={{ right: 26, top: 60, transform: "rotate(12deg)" }} />
         {top.length > 0 && <PeekSkull x={peekCentre - 34} y={stoneTop - 46} size={68} />}
