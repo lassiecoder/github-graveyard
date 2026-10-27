@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { DigForm } from "@/components/DigForm";
-import { FEATURED, xHandleFor } from "@/lib/devs";
+import { xHandleFor } from "@/lib/devs";
 import { Tombstone } from "@/components/Tombstone";
 import { TopBar } from "@/components/TopBar";
 import { StarCard } from "@/components/StarCard";
@@ -106,26 +105,6 @@ export default function Home() {
 
           <div className="fade-up mt-9 w-full max-w-[460px] -rotate-2" style={{ animationDelay: "240ms" }}>
             <DigForm autoFocus />
-          </div>
-
-          <div className="fade-up mt-7 flex max-w-2xl flex-wrap items-center justify-center gap-2" style={{ animationDelay: "320ms" }}>
-            <span className="script mr-1 text-3xl text-white">or haunt</span>
-            {FEATURED.map((d) => (
-              <Link
-                key={d.login}
-                href={`/${d.login}`}
-                prefetch={false}
-                data-track="featured_click"
-                data-track-login={d.login}
-                data-track-source="haunt_chip"
-                data-og-warm={d.login}
-                className="chip inline-flex items-center gap-1.5 rounded-full py-1 pl-1 pr-3 text-sm font-semibold"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`https://github.com/${d.login}.png?size=48`} alt="" width={22} height={22} loading="lazy" className="size-[22px] rounded-full bg-ink/10" />
-                @{d.x}
-              </Link>
-            ))}
           </div>
         </div>
       </section>
