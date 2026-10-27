@@ -532,6 +532,8 @@ html.ghost-cursor :is(input, textarea, [contenteditable]) {
 .spider-hang {
   animation: spider-bob 5.5s cubic-bezier(0.45, 0, 0.3, 1) infinite;
   transform-origin: top center;
+  /* Dangling away from the page, so the shadow falls further and softer. */
+  filter: drop-shadow(3px 10px 6px rgba(23, 17, 14, 0.28));
 }
 
 @keyframes spider-bob {
@@ -570,6 +572,37 @@ html.ghost-cursor :is(input, textarea, [contenteditable]) {
 .spider-crawl {
   offset-rotate: auto 90deg;
   offset-distance: 0;
+  /* Close to the surface: a tight, near-centred shadow, so it still reads
+     right as offset-rotate turns the spider (and its shadow) along the path. */
+  filter: drop-shadow(0 2px 2.5px rgba(23, 17, 14, 0.4));
+}
+
+/* Footprints left behind by crawling spiders (components/Crawler.tsx). */
+.spider-prints {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.spider-print {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  animation: spider-print 2.8s ease-out forwards;
+}
+
+@keyframes spider-print {
+  0% {
+    opacity: 0.55;
+  }
+  60% {
+    opacity: 0.32;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 /* Alternating tetrapod gait: the two leg sets swing in opposite phase. */

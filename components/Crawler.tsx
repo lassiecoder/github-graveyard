@@ -57,6 +57,39 @@ export function CrawlingSpider({
     const ro = new ResizeObserver(layout);
     ro.observe(parent);
 
+    // Footprints: a layer just under the spider (same parent, so same
+    // coordinates as its path) that collects tiny fading dots.
+    const prints = document.createElement("div");
+    prints.className = "spider-prints";
+    prints.setAttribute("aria-hidden", "true");
+    prints.style.color = getComputedStyle(el).color;
+    parent.insertBefore(prints, el);
+    const stride = size * 0.32;
+    const spread = size * 0.3;
+    const dot = Math.max(2.2, size * 0.055);
+    let lastPrint = 0;
+    let side = 1;
+    const footprint = (at: number) => {
+      const p = probe.getPointAtLength(at);
+      const q = probe.getPointAtLength(Math.min(end, at + 1));
+      const len = Math.hypot(q.x - p.x, q.y - p.y) || 1;
+      // Unit normal to the path; feet land either side, staggered like steps.
+      const nx = -(q.y - p.y) / len;
+      const ny = (q.x - p.x) / len;
+      for (const s of [side, -side]) {
+        const lag = s === side ? 0 : stride * 0.45;
+        const back = probe.getPointAtLength(Math.max(0, at - lag));
+        const d = document.createElement("span");
+        d.className = "spider-print";
+        d.style.cssText = `left:${back.x + nx * spread * s - dot / 2}px;top:${back.y + ny * spread * s - dot / 2}px;width:${dot}px;height:${dot}px`;
+        d.addEventListener("animationend", () => d.remove(), { once: true });
+        prints.appendChild(d);
+      }
+      side = -side;
+      // Keep the DOM small on long sessions.
+      while (prints.childElementCount > 60) prints.firstElementChild?.remove();
+    };
+
     const topSpeed = 260 * scale * speed;
     const dart = () => rand(160, 460) * scale;
 
@@ -77,6 +110,7 @@ export function CrawlingSpider({
         // Off the far edge: wait a while, then come round again.
         dist = 0;
         goal = 0;
+        lastPrint = 0;
         el.style.offsetDistance = "0px";
         pauseUntil = now + rand(2500, 6000);
       } else if (dist >= goal && goal > 0) {
@@ -89,6 +123,10 @@ export function CrawlingSpider({
         v = Math.min(v + 900 * scale * dt, topSpeed);
         dist = Math.min(goal, dist + v * dt);
         el.style.offsetDistance = `${dist}px`;
+        if (dist - lastPrint >= stride) {
+          lastPrint = dist;
+          footprint(dist);
+        }
       }
       frame = requestAnimationFrame(tick);
     };
@@ -96,8 +134,9 @@ export function CrawlingSpider({
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();
+      prints.remove();
     };
-  }, [path, scale, speed, delay]);
+  }, [path, scale, speed, delay, size]);
 
   return (
     <div
