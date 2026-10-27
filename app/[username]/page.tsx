@@ -13,7 +13,8 @@ import { Cobweb, Ghost, NightEdge, NightGhosts, Sparkle, Swirl } from "@/compone
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, monthYear } from "@/lib/format";
 import { graveyardTweet, graveyardUrl, xIntent } from "@/lib/share";
-import { ogCardUrl, SITE_NAME } from "@/lib/site";
+import { after } from "next/server";
+import { ogCardUrl, SITE_NAME, warmShareCards } from "@/lib/site";
 import { OgPreview } from "@/components/OgPreview";
 
 export async function generateMetadata({ params }: PageProps<"/[username]">): Promise<Metadata> {
@@ -67,6 +68,7 @@ async function GraveyardView({ params }: { params: PageProps<"/[username]">["par
   const g = res.data;
   const url = graveyardUrl(g.login);
   const n = g.graves.length;
+  after(() => warmShareCards([ogCardUrl(g.login), ogCardUrl(g.login, "portrait")]));
 
   return (
     <>

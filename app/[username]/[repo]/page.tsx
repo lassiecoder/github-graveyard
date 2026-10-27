@@ -8,7 +8,8 @@ import { Ghost, NightEdge, Sparkle, Swirl } from "@/components/Decor";
 import { getGraveyard } from "@/lib/github";
 import { lifespanLabel, year } from "@/lib/format";
 import { graveTweet, graveUrl, xIntent } from "@/lib/share";
-import { ogGraveUrl, SITE_NAME } from "@/lib/site";
+import { after } from "next/server";
+import { ogGraveUrl, SITE_NAME, warmShareCards } from "@/lib/site";
 
 type Props = PageProps<"/[username]/[repo]">;
 
@@ -50,6 +51,8 @@ export default function Page({ params }: Props) {
 async function GraveView({ params }: { params: Props["params"] }) {
   const { username, repo, res, grave } = await find(params);
   const login = res.ok ? res.data.login : username;
+
+  if (grave) after(() => warmShareCards([ogGraveUrl(login, grave.name)]));
 
   if (!grave) {
     return (
