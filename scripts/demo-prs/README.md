@@ -19,14 +19,14 @@ account** that is a Security team member (D3, and approvals in D1/D2).
 
 ## D1: `d1-share-target.sh`, then `d1-fix.sh`
 
-Adds a `share_target` parameter in `lib/analytics.ts` with a small bug (sent unescaped, length cap off
-by one). `lib/analytics.ts` is a path of `data-privacy-egress` (Security, required, high tier).
+Adds a `share_target` parameter in `lib/analytics.ts` with two small bugs (sent unescaped, length cap
+off by one). `lib/analytics.ts` is a path of `data-privacy-egress` (Security, required, high tier).
 
 Run `d1-share-target.sh`, and look for:
 
 - [ ] Security required by path, high tier.
 - [ ] The check is in progress ("Preparing your review") until the AI reviewers finish.
-- [ ] Then "Waiting on @author", with the defect as an inline thread and "1 defect outstanding" in the author comment.
+- [ ] Then "Waiting on @author", with the defects as an inline thread each and "2 defects outstanding" in the author comment.
 - [ ] Nobody else is notified.
 
 Then run `d1-fix.sh` (pushes the fix to the same branch) and look for:
@@ -44,6 +44,11 @@ script commits with `Co-Authored-By: Claude <noreply@anthropic.com>` and `Prompt
 if a bot opened it, and adds `data-track-*` attributes to the heading in `app/page.tsx`. The commit is
 made with your own git identity, so the PR author is you: to see it fully as a bot PR, run the script
 from the bot account's checkout.
+
+Note: "Waiting on @prompter" and the prompter ping need a Bot-authored PR with a defect, which this
+script does not produce. The D2 tag-in part (the checks below other than the prompter one) still demos.
+The prompter behaviour is proven by tests (`packages/worker/test/review/feedback.test.ts`, S2.9, in
+aitriforce-cloud).
 
 Look for:
 

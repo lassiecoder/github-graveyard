@@ -62,6 +62,7 @@ ci:
   workflow: CI
   covers: "lint, typecheck, unit tests (Vitest), production build, Playwright screenshots"
   screenshots_artifact: triforce-screens
+  wait_minutes: 1
 
 autofix:
   enabled: true
