@@ -58,6 +58,11 @@ options:
   merge_when_ready: true
   merge_method: squash
 
+models:
+  # Debug only (aitriforce-cloud ADR 0035, D-018): show the first line of the Anthropic API's own
+  # error message on PR error lines. Turn it off again before outside teams use this repo.
+  show_api_errors: true
+
 ci:
   workflow: CI
   covers: "lint, typecheck, unit tests (Vitest), production build, Playwright screenshots"
