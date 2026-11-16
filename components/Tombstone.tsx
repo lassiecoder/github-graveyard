@@ -65,7 +65,7 @@ export function Tombstone({
     <article
       className="plot group"
       style={{ "--i": index } as React.CSSProperties}
-      aria-label={`${grave.name}, ${year(grave.born)} to ${year(grave.died)}. Cause of death: ${grave.cause}`}
+      aria-label={`${grave.name}, ${year(grave.born)} to ${year(grave.died)}. Died of: ${grave.cause}`}
     >
       <div className="stone-wrap" style={{ "--tilt": grave.tilt } as React.CSSProperties}>
         <Ghost color={GHOST_FOR[ci]} className="peeker" />
