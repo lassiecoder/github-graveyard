@@ -191,6 +191,7 @@ const EPITAPHS = [
   "Returned with exit code 0. Peacefully.",
   "Shipped to localhost only.",
   "Pushed to main, then to the grave.",
+  "Closed as stale by a bot it never met.",
 ];
 
 const SHAPES: Shape[] = ["round", "round", "gothic", "cross", "slab"];
