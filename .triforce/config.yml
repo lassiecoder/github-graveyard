@@ -62,6 +62,16 @@ models:
   # Debug only (aitriforce-cloud ADR 0035, D-018): show the first line of the Anthropic API's own
   # error message on PR error lines. Turn it off again before outside teams use this repo.
   show_api_errors: true
+  # OpenRouter model IDs (prod uses ANTHROPIC_BASE_URL=https://openrouter.ai/api).
+  # Sonnet/Haiku only during plumbing; decided 2026-11-16.
+  classifier: anthropic/claude-sonnet-5.5
+  classifier_fallback: anthropic/claude-haiku-5.5
+  reviewer_fallback: anthropic/claude-haiku-5.5
+  prepare: anthropic/claude-sonnet-5.5
+  persona: anthropic/claude-haiku-5.5
+  triage: anthropic/claude-sonnet-5.5
+  fixer: anthropic/claude-sonnet-5.5
+  rebase: anthropic/claude-sonnet-5.5
 
 ci:
   workflow: CI
