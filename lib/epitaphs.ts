@@ -176,7 +176,7 @@ const EPITAPHS = [
   "It compiled. That was enough.",
   "Here lies great potential and a half-written README.",
   "Gone, but never git rm'd.",
-  "Forever in our git log.",
+  "Forever in our git log, never in our changelog.",
   "May its dependencies rest in peace.",
   "It worked on my machine.",
   "Taken from us by a better idea.",
