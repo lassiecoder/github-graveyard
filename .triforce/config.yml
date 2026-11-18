@@ -20,10 +20,15 @@ roles:
   IE: { about: "Integrity Engineer: security, secrets, data egress, CI and test integrity.", preset: security }
   SE: { about: "Systems Engineer: architecture, dependencies, build and runtime config.", preset: platform }
   PXA: { about: "Product Experience Architect: UI, design system, copy and UX.", preset: features }
+  BG: { about: "Brand and graphic design.", preset: design }
 
 people:
-  joshuayoes: { roles: [IE, SE], about: "Sandbox owner; security, CI and dependencies." }
+  joshuayoes: { slack: U0CK3LE6S6L, roles: [IE, SE], about: "Sandbox owner; security, CI and dependencies." }
   trevor-coleman: { roles: [IE], about: "Acting Integrity Engineer for the sandbox test (normally PXA)." }
+  uheron: { slack: U0CHTTB9HFZ, roles: [PXA] }
+  silasjmatson: { slack: U0CJFV80F3P, roles: [IE] }
+  # Trevor's Slack-only design identity: github: false, so it owns design through role:BG.
+  trevor-design: { slack: U0CJB6787JM, github: false, roles: [BG] }
 
 # Owns this file and approves new team folders.
 config_owners: [team:platform]
@@ -51,6 +56,17 @@ domains:
     level: advisory
     owners: [team:legal]
 
+  demo-design:
+    uses: ui
+    level: advisory
+    owners: [role:BG]
+
+# Slack requests (aitriforce-cloud spec/14-slack.md, SL1).
+requests:
+  enabled: true
+  name: "the Graveyard site"
+  role: PXA
+
 options:
   stale_approvals: zone-touch
   self_approval: when_sole_owner
@@ -72,6 +88,9 @@ models:
   triage: anthropic/claude-sonnet-5.5
   fixer: anthropic/claude-sonnet-5.5
   rebase: anthropic/claude-sonnet-5.5
+  # Slack requests: request clarifies, request_fast reads each message.
+  request: anthropic/claude-sonnet-5.5
+  request_fast: anthropic/claude-haiku-5.5
 
 ci:
   workflow: CI
