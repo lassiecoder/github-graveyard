@@ -80,6 +80,23 @@ Adds one joke to `lib/epitaphs.ts`. No team is on it.
 
 Who must act: nobody.
 
+## A2: `a2-share-username.sh`
+
+Adds `data-track-username={login}` to the X share button in `components/ShareBar.tsx`, so each share
+sends the viewer's username to analytics. No comment says so. `components/ShareBar.tsx` is not one of
+the floor paths of `data-privacy-egress` (Security's paths for it are `lib/github.ts`, `lib/digs.ts`,
+`lib/analytics.ts`, `lib/site.ts`, `components/Analytics.tsx`, `app/api/dig/**`), so only the
+classifier can add Security here.
+
+Look for:
+
+- [ ] The classifier adds `data-privacy-egress`, with a `file:line` reason (not a path match).
+- [ ] High tier.
+- [ ] An IE decision thread from the privacy lens.
+- [ ] Two people requested, and the second-person row.
+
+Who must act: a Security member approves, twice (high tier), to see the gate pass.
+
 ## Known limit
 
 GitHub Actions is disabled on this repo (T-049), so CI is `none` live. D1's CI wait and A1's
