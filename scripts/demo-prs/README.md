@@ -73,7 +73,8 @@ Who must act: the second account (the Security reviewer), then the author.
 
 ## A1: `a1-epitaph.sh`
 
-Adds one joke to `lib/epitaphs.ts`. No team is on it.
+Adds one joke to `lib/epitaphs.ts`. No team is on it. Re-runs pick a joke that is not already in the
+file (the first unused one from the script's list), and fail if every candidate is used.
 
 - [ ] Read by every AI reviewer.
 - [ ] With nothing found and CI green, merges with no person asked (`merge_when_ready: true`).
@@ -99,5 +100,4 @@ Who must act: a Security member approves, twice (high tier), to see the gate pas
 
 ## Known limit
 
-GitHub Actions is disabled on this repo (T-049), so CI is `none` live. D1's CI wait and A1's
-auto-merge on green CI can't be shown until Actions is re-enabled; everything else can.
+CI runs on this repo (GitHub-hosted), so D1's CI wait and A1's auto-merge on green CI can be shown.
