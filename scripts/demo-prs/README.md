@@ -19,21 +19,23 @@ account** that is a Security team member (D3, and approvals in D1/D2).
 
 ## D1: `d1-share-target.sh`, then `d1-fix.sh`
 
-Adds a `share_target` parameter in `lib/analytics.ts` with two small bugs (sent unescaped, length cap
-off by one). `lib/analytics.ts` is a path of `data-privacy-egress` (Security, required, high tier).
+Adds a `share_target` parameter in `lib/analytics.ts` with one small bug: copy-link shares are recorded as `download_image` (ShareBar's `data-track-method` calls them `copy_link`). `lib/analytics.ts` is a path of `data-privacy-egress` (Security, required, high tier).
 
 Run `d1-share-target.sh`, and look for:
 
 - [ ] Security required by path, high tier.
 - [ ] The check is in progress ("Preparing your review") until the AI reviewers finish.
-- [ ] Then "Waiting on @author", with the defects as an inline thread each and "2 defects outstanding" in the author comment.
+- [ ] Then "Waiting on @author", with the defect as an inline thread and "1 defect outstanding" in the author comment.
 - [ ] Nobody else is notified.
 
 Then run `d1-fix.sh` (pushes the fix to the same branch) and look for:
 
+- [ ] The defect thread is resolved with "Fixed in <short sha>".
 - [ ] One Security role comment.
 - [ ] A decision thread from the privacy lens.
 - [ ] Two people requested, and the second-person row.
+
+Whether the AI reviewers raise anything else (for example, the privacy lens's point as a defect rather than a decision, or that `trackShare` runs alongside ShareBar's existing `share` event) is model judgement. A second defect thread means the planted code needs another look, not that Triforce miscounted. The privacy-lens decision check may not appear when nothing is left to decide.
 
 Who must act: the second account approves (twice, for a high-tier PR) to see the gate pass.
 
