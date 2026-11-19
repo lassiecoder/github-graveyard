@@ -1,8 +1,13 @@
 import { cacheLife } from "next/cache";
 import { diagnose, graveyardTitle, type Diagnosis } from "./epitaphs";
 
-// GITHUB_API_URL is only set by scripts/screens.mjs, to point screenshots at scripts/mock-github.mjs.
-const API = process.env.GITHUB_API_URL || "https://api.github.com";
+// GRAVEYARD_GITHUB_API_URL points the app at scripts/mock-github.mjs (CI build and screenshots).
+// Not GITHUB_API_URL: GitHub Actions reserves GITHUB_* and sets that one to https://api.github.com on
+// every runner, ignoring the workflow's value, so the CI build silently hit the real (rate-limited) API.
+// Read per call rather than at module load, so it can't be captured before the env is in place.
+function apiBase() {
+  return process.env.GRAVEYARD_GITHUB_API_URL || "https://api.github.com";
+}
 const DEAD_AFTER_DAYS = 180;
 const MAX_PAGES = 3;
 const DAY = 86_400_000;
@@ -64,7 +69,7 @@ function pickToken(): string | undefined {
 
 async function gh(path: string) {
   const token = pickToken();
-  return fetch(`${API}${path}`, {
+  return fetch(`${apiBase()}${path}`, {
     headers: {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",

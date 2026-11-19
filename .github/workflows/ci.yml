@@ -19,7 +19,8 @@ permissions:
 env:
   # The landing page prerenders GitHub data at build time. CI has no GitHub token, so the build
   # (and the screenshots) talk to scripts/mock-github.mjs instead of api.github.com.
-  GITHUB_API_URL: http://127.0.0.1:4010
+  # Not GITHUB_API_URL: Actions reserves GITHUB_* names and overrides that one with the real API.
+  GRAVEYARD_GITHUB_API_URL: http://127.0.0.1:4010
   NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:

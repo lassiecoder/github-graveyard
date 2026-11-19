@@ -2,7 +2,7 @@
 // plus a manifest for Triforce's design review (artifact "triforce-screens").
 // Usage: node scripts/screens.mjs <base-dir> <head-dir> <out-dir> <head-sha>
 // Each dir is a checkout that has already been through `npm run build`. Each is served with
-// `next start`, with GITHUB_API_URL pointing at scripts/mock-github.mjs.
+// `next start`, with GRAVEYARD_GITHUB_API_URL pointing at scripts/mock-github.mjs.
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -22,7 +22,8 @@ const out = resolve(outArg);
 async function serve(dir, port, githubUrl) {
   const child = spawn('npx', ['next', 'start', '-p', String(port)], {
     cwd: dir,
-    env: { ...process.env, GITHUB_API_URL: githubUrl, GITHUB_TOKENS: '', GITHUB_TOKEN: '' },
+    // GITHUB_API_URL too, for a base built before the rename.
+    env: { ...process.env, GRAVEYARD_GITHUB_API_URL: githubUrl, GITHUB_API_URL: githubUrl, GITHUB_TOKENS: '', GITHUB_TOKEN: '' },
     stdio: ['ignore', 'inherit', 'inherit'],
   });
   const url = `http://127.0.0.1:${port}`;
@@ -68,9 +69,9 @@ async function capture(browser, dir, side, port, githubUrl) {
 }
 
 // The workflow starts the mock before building (the landing page prerenders GitHub data at build
-// time) and passes it in as GITHUB_API_URL; run standalone, start our own.
-const mock = process.env.GITHUB_API_URL
-  ? { url: process.env.GITHUB_API_URL, close: () => {} }
+// time) and passes it in as GRAVEYARD_GITHUB_API_URL; run standalone, start our own.
+const mock = process.env.GRAVEYARD_GITHUB_API_URL
+  ? { url: process.env.GRAVEYARD_GITHUB_API_URL, close: () => {} }
   : await startMockGithub();
 const browser = await chromium.launch({ channel: 'chrome' });
 let before = {};

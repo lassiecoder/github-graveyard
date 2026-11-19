@@ -1,5 +1,5 @@
 // A tiny stand-in for api.github.com so screenshots are deterministic and need no token.
-// The app reaches it through the env-gated GITHUB_API_URL override in lib/github.ts.
+// The app reaches it through the env-gated GRAVEYARD_GITHUB_API_URL override in lib/github.ts.
 // Any login gets the same fixed set of repos, all pushed years ago so they all count as dead.
 import { createServer } from 'node:http';
 
