@@ -191,6 +191,7 @@ const EPITAPHS = [
   "Returned with exit code 0. Peacefully.",
   "Shipped to localhost only.",
   "Pushed to main, then to the grave.",
+  "Last commit: fix typo. Next commit: never.",
   "Its README promised a roadmap.",
   "Its CI was green. Its users were not.",
   "Closed as stale by a bot it never met.",
