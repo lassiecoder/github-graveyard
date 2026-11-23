@@ -66,6 +66,7 @@ requests:
   enabled: true
   name: "the Graveyard site"
   role: PXA
+  shipped_note: "It goes out with the next release."
 
 options:
   stale_approvals: zone-touch
@@ -91,6 +92,7 @@ models:
   # Slack requests: request clarifies, request_fast reads each message.
   request: anthropic/claude-sonnet-5.5
   request_fast: anthropic/claude-haiku-5.5
+  build: anthropic/claude-sonnet-5.5
 
 ci:
   workflow: CI
